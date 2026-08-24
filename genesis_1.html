@@ -106,6 +106,11 @@
   .vocab td.word{ color:var(--accent); font-weight:bold; white-space:nowrap; }
   footer{ text-align:center; color:var(--sub); font-size:0.8rem; margin-top:20px; }
 
+  .verse.speaking{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent-soft), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
   .gloss{
     border-bottom:1px dotted var(--accent);
     cursor:pointer;
@@ -158,6 +163,9 @@
     <label>음높이 <input type="range" id="pitchRange" min="0.7" max="1.2" step="0.05" value="0.95"></label>
   </div>
   <p class="voice-tip">🇬🇧 기본값은 영국식 억양입니다. 상단에서 미국식으로도 바꿀 수 있습니다.<br>💡 목록에 <b>Natural / Neural / Online / Enhanced</b> 가 붙은 음성(⭐표시)을 고르시면 훨씬 자연스럽습니다.<br>점선 밑줄 있는 영어 단어에 마우스를 올리면 뜻이, <b>클릭하면 발음</b>이 들립니다.</p>
+  <div style="margin-top:16px;">
+    <button class="play-btn" id="playAllBtn" style="padding:9px 22px; font-size:0.9rem;">▶ 1장 전체 듣기</button>
+  </div>
 </header>
 
 <div class="no-support" id="noSupport">
@@ -584,9 +592,12 @@
   }
 
   document.querySelectorAll('.play-btn').forEach(btn=>{
+    if (btn.id === 'playAllBtn') return;
     btn.addEventListener('click', ()=>{
       const targetId = btn.getAttribute('data-target');
       const text = document.querySelector('#' + targetId + ' .en-text').textContent.trim();
+
+      if (isPlayingAll) { stopAll(); }
 
       if (currentBtn === btn && synth.speaking) {
         synth.cancel();
@@ -617,11 +628,63 @@
     });
   });
 
+  // --- Play all verses in sequence ---
+  const playAllBtn = document.getElementById('playAllBtn');
+  let allPlayQueue = [];
+  let allPlayIndex = 0;
+  let isPlayingAll = false;
+
+  function stopAll(){
+    synth.cancel();
+    resetButtons();
+    document.querySelectorAll('.verse.speaking').forEach(v=>v.classList.remove('speaking'));
+    isPlayingAll = false;
+    playAllBtn.textContent = '▶ 1장 전체 듣기';
+    playAllBtn.classList.remove('playing');
+    currentBtn = null;
+  }
+
+  function speakQueueItem(){
+    if (allPlayIndex >= allPlayQueue.length){ stopAll(); return; }
+    const id = allPlayQueue[allPlayIndex];
+    document.querySelectorAll('.verse.speaking').forEach(v=>v.classList.remove('speaking'));
+    const verseEl = document.getElementById(id);
+    verseEl.classList.add('speaking');
+    verseEl.scrollIntoView({behavior:'smooth', block:'center'});
+
+    const text = verseEl.querySelector('.en-text').textContent.trim();
+    const utter = new SpeechSynthesisUtterance(text);
+    const selectedVoice = voices[voiceSelect.value];
+    if (selectedVoice) utter.voice = selectedVoice;
+    utter.rate = parseFloat(rateRange.value);
+    utter.pitch = parseFloat(pitchRange.value);
+    utter.lang = accentSelect.value;
+
+    utter.onend = () => { allPlayIndex++; if (isPlayingAll) speakQueueItem(); };
+    utter.onerror = () => { allPlayIndex++; if (isPlayingAll) speakQueueItem(); };
+
+    synth.speak(utter);
+  }
+
+  playAllBtn.addEventListener('click', ()=>{
+    if (isPlayingAll){ stopAll(); return; }
+
+    synth.cancel();
+    resetButtons();
+    allPlayQueue = Array.from(document.querySelectorAll('.verse')).map(v=>v.id);
+    allPlayIndex = 0;
+    isPlayingAll = true;
+    playAllBtn.textContent = '⏸ 전체 재생 중지';
+    playAllBtn.classList.add('playing');
+    speakQueueItem();
+  });
+
   // --- Click a word to hear just that word ---
   document.addEventListener('click', (e)=>{
     const wordEl = e.target.closest('.gloss');
     if (!wordEl) return;
 
+    if (isPlayingAll) { stopAll(); }
     synth.cancel();
     resetButtons();
     currentBtn = null;
