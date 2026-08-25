@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창세기 3장 영어 학습 노트 (절별)</title>
+<style>
+  :root{
+    --bg:#f7f4ec; --card:#ffffff; --ink:#2b2620; --sub:#6b6255;
+    --accent:#8a6d3b; --accent-soft:#f1e6d0; --line:#e5ddc9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Georgia','Nanum Myeongjo',serif;
+    background:var(--bg); color:var(--ink); line-height:1.7; padding-bottom:60px;
+  }
+  header{
+    text-align:center; padding:44px 20px 24px; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#fffdf8,var(--bg));
+  }
+  header h1{ margin:0 0 8px; font-size:2rem; letter-spacing:1px; }
+  header p{ margin:0; color:var(--sub); font-size:0.95rem; }
+  .controls-global{
+    display:flex; justify-content:center; gap:10px;
+    margin-top:16px; flex-wrap:wrap; align-items:center;
+  }
+  .controls-global label{
+    font-size:0.85rem; color:var(--sub);
+    display:flex; align-items:center; gap:6px;
+  }
+  select, input[type=range]{ accent-color:var(--accent); }
+  .voice-tip{
+    font-size:0.78rem; color:#8a8171; max-width:600px;
+    margin:12px auto 0;
+  }
+  .no-support{
+    display:none; text-align:center; background:#fff3ea;
+    border:1px solid #e8c8a8; color:#8a4a1e; padding:10px;
+    border-radius:8px; max-width:760px; margin:16px auto 0; font-size:0.85rem;
+  }
+  main{ max-width:760px; margin:0 auto; padding:30px 20px; }
+  .day-nav{
+    display:flex; flex-wrap:wrap; gap:8px;
+    justify-content:center; margin-bottom:30px; position:sticky; top:0;
+    background:var(--bg); padding:10px 0; z-index:5;
+  }
+  .day-nav button{
+    border:1px solid var(--accent); background:transparent; color:var(--accent);
+    padding:6px 14px; border-radius:20px; font-size:0.85rem;
+    cursor:pointer; font-family:inherit;
+  }
+  .day-nav button:hover{ background:var(--accent-soft); }
+  .day-block{ margin-bottom:38px; }
+  .day-block h2{
+    font-size:1.25rem; color:var(--accent);
+    border-bottom:2px solid var(--accent-soft);
+    padding-bottom:8px; margin-bottom:16px;
+  }
+  .verse{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 20px;
+    margin-bottom:14px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.03);
+    position:relative;
+  }
+  .verse-head{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .verse-num{
+    background:var(--accent); color:#fff; font-family:sans-serif;
+    font-size:0.78rem; font-weight:bold; border-radius:50%;
+    width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .play-btn{
+    background:var(--accent); color:#fff; border:none;
+    padding:5px 13px; border-radius:16px; cursor:pointer;
+    font-size:0.78rem; font-family:inherit; margin-left:auto;
+    white-space:nowrap;
+  }
+  .play-btn:hover{ opacity:0.9; }
+  .play-btn.playing{ background:#5e4a26; }
+  .en-text{ font-size:1.02rem; margin:4px 0 10px; }
+  .ko-text{
+    font-size:0.94rem; color:#4a4336; background:var(--accent-soft);
+    border-left:3px solid var(--accent); padding:8px 14px; border-radius:6px;
+  }
+  .vocab{ margin-top:6px; }
+  .vocab summary{ cursor:pointer; color:var(--accent); font-size:0.88rem; font-weight:bold; }
+  .vocab table{ width:100%; border-collapse:collapse; margin-top:8px; font-size:0.88rem; }
+  .vocab td, .vocab th{ border-bottom:1px solid var(--line); padding:5px 8px; text-align:left; }
+  .vocab th{ color:var(--sub); font-weight:normal; font-size:0.78rem; }
+  .vocab td.word{ color:var(--accent); font-weight:bold; white-space:nowrap; }
+  footer{ text-align:center; color:var(--sub); font-size:0.8rem; margin-top:20px; }
+
+  .verse.speaking{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent-soft), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .gloss{ border-bottom:1px dotted var(--accent); cursor:pointer; position:relative; }
+  .gloss:active{ background:var(--accent); color:#fff; border-radius:3px; }
+  .gloss:hover{ background:var(--accent-soft); border-radius:3px; }
+  .gloss:hover::after{
+    content:attr(data-meaning); position:absolute; bottom:130%; left:50%;
+    transform:translateX(-50%); background:#3a2f1e; color:#fdf9ef;
+    padding:5px 10px; border-radius:6px; font-size:0.78rem;
+    font-family:'Nanum Myeongjo', sans-serif; white-space:nowrap;
+    box-shadow:0 3px 10px rgba(0,0,0,0.25); z-index:30; pointer-events:none;
+  }
+  .gloss:hover::before{
+    content:''; position:absolute; bottom:118%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:#3a2f1e; z-index:30; pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Genesis 3 · 창세기 3장</h1>
+  <p>3:1–24 · 절(verse)별 영어 원문 · 한글 풀이 · 개별 듣기</p>
+  <div class="controls-global">
+    <label>억양 <select id="accentSelect">
+      <option value="en-GB">영국식 (British)</option>
+      <option value="en-US">미국식 (American)</option>
+    </select></label>
+    <label>목소리 <select id="voiceSelect"></select></label>
+    <label>속도 <input type="range" id="rateRange" min="0.6" max="1.3" step="0.1" value="0.85"></label>
+    <label>음높이 <input type="range" id="pitchRange" min="0.7" max="1.2" step="0.05" value="0.95"></label>
+  </div>
+  <p class="voice-tip">🇬🇧 기본값은 영국식 억양입니다. 상단에서 미국식으로도 바꿀 수 있습니다.<br>💡 목록에 <b>Natural / Neural / Online / Enhanced</b> 가 붙은 음성(⭐표시)을 고르시면 훨씬 자연스럽습니다.<br>점선 밑줄 있는 영어 단어에 마우스를 올리면 뜻이, <b>클릭하면 발음</b>이 들립니다.</p>
+  <div style="margin-top:16px;">
+    <button class="play-btn" id="playAllBtn" style="padding:9px 22px; font-size:0.9rem;">▶ 3장 전체 듣기</button>
+  </div>
+</header>
+
+<div class="no-support" id="noSupport">
+  ⚠️ 이 브라우저는 음성 읽기 기능을 지원하지 않습니다. Chrome 사용을 권장합니다.
+</div>
+
+<main>
+  <div class="day-nav" id="dayNav"></div>
+
+  <!-- SECTION 1 -->
+  <div class="day-block" id="sec1">
+    <h2>Human Disobedience · 사람의 불순종 (3:1–13)</h2>
+
+    <div class="verse" id="v1">
+      <div class="verse-head"><span class="verse-num">1</span><button class="play-btn" data-target="v1">▶ 듣기</button></div>
+      <div class="en-text">Now the snake was the most cunning animal that the LORD God had made. The snake asked the woman, "Did God really tell you not to eat fruit from any tree in the garden?"</div>
+      <div class="ko-text">뱀은 주 하나님이 만드신 동물 가운데 가장 교활했습니다. 뱀이 여자에게 물었습니다. "하나님이 정말 동산의 어떤 나무 열매도 먹지 말라고 하셨느냐?"</div>
+    </div>
+
+    <div class="verse" id="v2">
+      <div class="verse-head"><span class="verse-num">2</span><button class="play-btn" data-target="v2">▶ 듣기</button></div>
+      <div class="en-text">"We may eat the fruit of any tree in the garden," the woman answered,</div>
+      <div class="ko-text">여자가 대답했습니다. "우리는 동산에 있는 나무의 열매를 먹을 수 있지만,</div>
+    </div>
+
+    <div class="verse" id="v3">
+      <div class="verse-head"><span class="verse-num">3</span><button class="play-btn" data-target="v3">▶ 듣기</button></div>
+      <div class="en-text">"except the tree in the middle of it. God told us not to eat the fruit of that tree or even touch it; if we do, we will die."</div>
+      <div class="ko-text">동산 한가운데 있는 나무의 열매만은 안 된다. 하나님이 그것을 먹지도 말고 만지지도 말라고 하셨다. 그러면 우리가 죽는다고 하셨다."</div>
+    </div>
+
+    <div class="verse" id="v4">
+      <div class="verse-head"><span class="verse-num">4</span><button class="play-btn" data-target="v4">▶ 듣기</button></div>
+      <div class="en-text">The snake replied, "That's not true; you will not die.</div>
+      <div class="ko-text">뱀이 대답했습니다. "절대로 죽지 않는다.</div>
+    </div>
+
+    <div class="verse" id="v5">
+      <div class="verse-head"><span class="verse-num">5</span><button class="play-btn" data-target="v5">▶ 듣기</button></div>
+      <div class="en-text">God said that, because he knows that when you eat it you will be like God and know what is good and what is bad."</div>
+      <div class="ko-text">하나님은 너희가 그것을 먹으면 하나님처럼 되어 선과 악을 알게 될 것을 아시기 때문에 그렇게 말씀하신 것이다."</div>
+    </div>
+
+    <div class="verse" id="v6">
+      <div class="verse-head"><span class="verse-num">6</span><button class="play-btn" data-target="v6">▶ 듣기</button></div>
+      <div class="en-text">The woman saw how beautiful the tree was and how good its fruit would be to eat, and she thought how wonderful it would be to become wise. So she took some of the fruit and ate it. Then she gave some to her husband, and he also ate it.</div>
+      <div class="ko-text">여자가 보니 그 나무는 보기에 아름답고 열매는 먹음직스러웠으며, 지혜롭게 해 줄 것 같아 탐스러웠습니다. 그래서 여자는 그 열매를 따서 먹고, 남편에게도 주니 그도 먹었습니다.</div>
+    </div>
+
+    <div class="verse" id="v7">
+      <div class="verse-head"><span class="verse-num">7</span><button class="play-btn" data-target="v7">▶ 듣기</button></div>
+      <div class="en-text">As soon as they had eaten it, they were given understanding and realized that they were naked; so they sewed fig leaves together and covered themselves.</div>
+      <div class="ko-text">그러자 두 사람의 눈이 밝아져 자기들이 벗은 것을 알게 되었고, 무화과나무 잎을 엮어 몸을 가렸습니다.</div>
+    </div>
+
+    <div class="verse" id="v8">
+      <div class="verse-head"><span class="verse-num">8</span><button class="play-btn" data-target="v8">▶ 듣기</button></div>
+      <div class="en-text">That evening they heard the LORD God walking in the garden, and they hid from him among the trees.</div>
+      <div class="ko-text">그날 저녁 그들은 주 하나님이 동산을 거니시는 소리를 듣고, 나무들 사이에 숨었습니다.</div>
+    </div>
+
+    <div class="verse" id="v9">
+      <div class="verse-head"><span class="verse-num">9</span><button class="play-btn" data-target="v9">▶ 듣기</button></div>
+      <div class="en-text">But the LORD God called out to the man, "Where are you?"</div>
+      <div class="ko-text">그러나 주 하나님이 사람을 부르시며 말씀하셨습니다. "네가 어디 있느냐?"</div>
+    </div>
+
+    <div class="verse" id="v10">
+      <div class="verse-head"><span class="verse-num">10</span><button class="play-btn" data-target="v10">▶ 듣기</button></div>
+      <div class="en-text">He answered, "I heard you in the garden; I was afraid and hid from you, because I was naked."</div>
+      <div class="ko-text">그가 대답했습니다. "동산에서 하나님의 소리를 듣고, 제가 벗은 것이 두려워 숨었습니다."</div>
+    </div>
+
+    <div class="verse" id="v11">
+      <div class="verse-head"><span class="verse-num">11</span><button class="play-btn" data-target="v11">▶ 듣기</button></div>
+      <div class="en-text">"Who told you that you were naked?" God asked. "Did you eat the fruit that I told you not to eat?"</div>
+      <div class="ko-text">하나님이 물으셨습니다. "누가 네게 벗었다고 말해 주었느냐? 내가 먹지 말라고 한 그 나무 열매를 먹었느냐?"</div>
+    </div>
+
+    <div class="verse" id="v12">
+      <div class="verse-head"><span class="verse-num">12</span><button class="play-btn" data-target="v12">▶ 듣기</button></div>
+      <div class="en-text">The man answered, "The woman you put here with me gave me the fruit, and I ate it."</div>
+      <div class="ko-text">사람이 대답했습니다. "하나님이 저와 함께 있게 하신 여자가 그 열매를 주어서 제가 먹었습니다."</div>
+    </div>
+
+    <div class="verse" id="v13">
+      <div class="verse-head"><span class="verse-num">13</span><button class="play-btn" data-target="v13">▶ 듣기</button></div>
+      <div class="en-text">The LORD God asked the woman, "Why did you do this?" She replied, "The snake tricked me into eating it."</div>
+      <div class="ko-text">주 하나님이 여자에게 물으셨습니다. "네가 어찌하여 이런 일을 저질렀느냐?" 여자가 대답했습니다. "뱀이 저를 꾀어서 제가 먹었습니다."</div>
+    </div>
+
+    <details class="vocab">
+      <summary>핵심 단어</summary>
+      <table>
+        <tr><th>단어</th><th>뜻</th></tr>
+        <tr><td class="word">cunning</td><td>교활한</td></tr>
+        <tr><td class="word">tricked</td><td>속였다, 꾀었다</td></tr>
+        <tr><td class="word">naked</td><td>벗은, 알몸의</td></tr>
+      </table>
+    </details>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="day-block" id="sec2">
+    <h2>God Pronounces Judgement · 하나님의 심판 선언 (3:14–21)</h2>
+
+    <div class="verse" id="v14">
+      <div class="verse-head"><span class="verse-num">14</span><button class="play-btn" data-target="v14">▶ 듣기</button></div>
+      <div class="en-text">Then the LORD God said to the snake, "You will be punished for this; you alone of all the animals must bear this curse: from now on you will crawl on your belly, and you will have to eat dust as long as you live.</div>
+      <div class="ko-text">주 하나님이 뱀에게 말씀하셨습니다. "네가 이런 일을 저질렀으니 벌을 받을 것이다. 모든 짐승 가운데 오직 너만 이 저주를 받아, 이제부터 배로 기어다니며 평생 흙을 먹고 살 것이다.</div>
+    </div>
+
+    <div class="verse" id="v15">
+      <div class="verse-head"><span class="verse-num">15</span><button class="play-btn" data-target="v15">▶ 듣기</button></div>
+      <div class="en-text">I will make you and the woman hate each other; her offspring and yours will always be enemies. Her offspring will crush your head, and you will bite her offspring's heel."</div>
+      <div class="ko-text">내가 너와 여자 사이에, 네 후손과 여자의 후손 사이에 서로 원수가 되게 하겠다. 여자의 후손은 네 머리를 상하게 하고, 너는 그의 발꿈치를 물 것이다."</div>
+    </div>
+
+    <div class="verse" id="v16">
+      <div class="verse-head"><span class="verse-num">16</span><button class="play-btn" data-target="v16">▶ 듣기</button></div>
+      <div class="en-text">And he said to the woman, "I will increase your trouble in pregnancy and your pain in giving birth. In spite of this, you will still have desire for your husband, yet you will be subject to him."</div>
+      <div class="ko-text">하나님이 여자에게 말씀하셨습니다. "내가 네가 임신하는 고통을 크게 더할 것이니, 너는 고통 중에 자식을 낳을 것이다. 그러면서도 너는 남편을 사모하고, 남편은 너를 다스릴 것이다."</div>
+    </div>
+
+    <div class="verse" id="v17">
+      <div class="verse-head"><span class="verse-num">17</span><button class="play-btn" data-target="v17">▶ 듣기</button></div>
+      <div class="en-text">And he said to the man, "You listened to your wife and ate the fruit which I told you not to eat. Because of what you have done, the ground will be under a curse. You will have to work hard all your life to make it produce enough food for you.</div>
+      <div class="ko-text">하나님이 남자에게 말씀하셨습니다. "네가 네 아내의 말을 듣고 내가 먹지 말라고 한 나무의 열매를 먹었으니, 너로 인해 땅이 저주를 받을 것이다. 너는 평생 수고해야 땅에서 나는 것을 먹을 것이다.</div>
+    </div>
+
+    <div class="verse" id="v18">
+      <div class="verse-head"><span class="verse-num">18</span><button class="play-btn" data-target="v18">▶ 듣기</button></div>
+      <div class="en-text">It will produce weeds and thorns, and you will have to eat wild plants.</div>
+      <div class="ko-text">땅은 네게 가시덤불과 엉겅퀴를 낼 것이며, 너는 들의 채소를 먹게 될 것이다.</div>
+    </div>
+
+    <div class="verse" id="v19">
+      <div class="verse-head"><span class="verse-num">19</span><button class="play-btn" data-target="v19">▶ 듣기</button></div>
+      <div class="en-text">You will have to work hard and sweat to make the soil produce anything, until you go back to the soil from which you were formed. You were made from soil, and you will become soil again."</div>
+      <div class="ko-text">너는 흙으로 돌아갈 때까지 얼굴에 땀을 흘려야 먹을 것을 얻을 것이다. 너는 흙에서 나왔으니 흙으로 돌아갈 것이다."</div>
+    </div>
+
+    <div class="verse" id="v20">
+      <div class="verse-head"><span class="verse-num">20</span><button class="play-btn" data-target="v20">▶ 듣기</button></div>
+      <div class="en-text">Adam named his wife Eve, because she was the mother of all human beings.</div>
+      <div class="ko-text">아담은 자기 아내를 하와라 불렀는데, 그는 모든 사람의 어머니가 되었기 때문입니다.</div>
+    </div>
+
+    <div class="verse" id="v21">
+      <div class="verse-head"><span class="verse-num">21</span><button class="play-btn" data-target="v21">▶ 듣기</button></div>
+      <div class="en-text">And the LORD God made clothes out of animal skins for Adam and his wife, and he clothed them.</div>
+      <div class="ko-text">주 하나님은 아담과 그의 아내에게 짐승의 가죽으로 옷을 지어 입히셨습니다.</div>
+    </div>
+
+    <details class="vocab">
+      <summary>핵심 단어</summary>
+      <table>
+        <tr><th>단어</th><th>뜻</th></tr>
+        <tr><td class="word">curse</td><td>저주</td></tr>
+        <tr><td class="word">crawl</td><td>기어다니다</td></tr>
+        <tr><td class="word">belly</td><td>배</td></tr>
+        <tr><td class="word">offspring</td><td>후손, 자손</td></tr>
+        <tr><td class="word">enemies</td><td>원수</td></tr>
+        <tr><td class="word">crush</td><td>짓밟다, 상하게 하다</td></tr>
+        <tr><td class="word">pregnancy</td><td>임신</td></tr>
+        <tr><td class="word">subject to</td><td>~에게 지배받는</td></tr>
+        <tr><td class="word">weeds</td><td>잡초</td></tr>
+        <tr><td class="word">thorns</td><td>가시</td></tr>
+        <tr><td class="word">sweat</td><td>땀 흘리다</td></tr>
+        <tr><td class="word">clothed</td><td>옷을 입히셨다</td></tr>
+      </table>
+    </details>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="day-block" id="sec3">
+    <h2>Adam and Eve are Sent Out of the Garden · 동산에서 쫓겨남 (3:22–24)</h2>
+
+    <div class="verse" id="v22">
+      <div class="verse-head"><span class="verse-num">22</span><button class="play-btn" data-target="v22">▶ 듣기</button></div>
+      <div class="en-text">Then the LORD God said, "Now the man has become like one of us and has knowledge of what is good and what is bad. He must not be allowed to take fruit from the tree that gives life, eat it, and live for ever."</div>
+      <div class="ko-text">주 하나님이 말씀하셨습니다. "이제 사람이 우리 중 하나처럼 선과 악을 알게 되었다. 그가 생명나무의 열매까지 따 먹고 영원히 살게 해서는 안 된다."</div>
+    </div>
+
+    <div class="verse" id="v23">
+      <div class="verse-head"><span class="verse-num">23</span><button class="play-btn" data-target="v23">▶ 듣기</button></div>
+      <div class="en-text">So the LORD God sent him out of the Garden of Eden and made him cultivate the soil from which he had been formed.</div>
+      <div class="ko-text">그리하여 주 하나님은 그를 에덴 동산에서 내보내시고, 그가 지음받은 흙을 갈게 하셨습니다.</div>
+    </div>
+
+    <div class="verse" id="v24">
+      <div class="verse-head"><span class="verse-num">24</span><button class="play-btn" data-target="v24">▶ 듣기</button></div>
+      <div class="en-text">Then at the east side of the garden he put living creatures and a flaming sword which turned in all directions. This was to keep anyone from coming near the tree that gives life.</div>
+      <div class="ko-text">하나님은 동산 동쪽에 그룹들과 사방으로 도는 불칼을 두어 생명나무로 가는 길을 지키게 하셨습니다.</div>
+    </div>
+
+    <details class="vocab">
+      <summary>핵심 단어</summary>
+      <table>
+        <tr><th>단어</th><th>뜻</th></tr>
+        <tr><td class="word">cultivate</td><td>경작하다, 갈다</td></tr>
+        <tr><td class="word">flaming sword</td><td>불타는 칼</td></tr>
+        <tr><td class="word">directions</td><td>방향</td></tr>
+      </table>
+    </details>
+  </div>
+
+  <footer>
+    본문: Genesis 3, GNT(Good News Translation) 기반 · 한글 풀이는 학습용 의역입니다.
+  </footer>
+</main>
+
+<script>
+  // --- Hover glossary ---
+  const glossary = {
+    "cunning": "교활한",
+    "tricked": "속였다, 꾀었다",
+    "naked": "벗은, 알몸의",
+    "curse": "저주",
+    "crawl": "기어다니다",
+    "belly": "배",
+    "offspring": "후손, 자손",
+    "enemies": "원수",
+    "crush": "짓밟다, 상하게 하다",
+    "pregnancy": "임신",
+    "subject to": "~에게 지배받는",
+    "weeds": "잡초",
+    "thorns": "가시",
+    "sweat": "땀 흘리다",
+    "clothed": "옷을 입혔다",
+    "cultivate": "경작하다, 갈다",
+    "flaming sword": "불타는 칼",
+    "directions": "방향",
+    "understanding": "깨달음, 분별력",
+    "realized": "깨달았다",
+    "punished": "벌을 받았다"
+  };
+
+  function escapeRegex(str){
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function applyGlossary(){
+    const phrases = Object.keys(glossary).sort((a,b)=> b.length - a.length);
+    const pattern = new RegExp('\\b(' + phrases.map(escapeRegex).join('|') + ')\\b', 'gi');
+
+    document.querySelectorAll('.en-text').forEach(el=>{
+      const original = el.textContent;
+      const html = original.replace(pattern, (match)=>{
+        const meaning = glossary[match.toLowerCase()];
+        if (!meaning) return match;
+        return '<span class="gloss" data-meaning="' + meaning + '">' + match + '</span>';
+      });
+      el.innerHTML = html;
+    });
+  }
+  applyGlossary();
+
+  const sections = ['sec1','sec2','sec3'];
+  const nav = document.getElementById('dayNav');
+  const navLabels = ['1–13절 (불순종)', '14–21절 (심판 선언)', '22–24절 (동산에서 쫓겨남)'];
+  sections.forEach((id,i)=>{
+    const btn = document.createElement('button');
+    btn.textContent = navLabels[i];
+    btn.onclick = () => document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+    nav.appendChild(btn);
+  });
+
+  // --- TTS setup ---
+  const synth = window.speechSynthesis;
+  const voiceSelect = document.getElementById('voiceSelect');
+  const accentSelect = document.getElementById('accentSelect');
+  const rateRange = document.getElementById('rateRange');
+  const pitchRange = document.getElementById('pitchRange');
+  let voices = [];
+  let currentBtn = null;
+
+  if (!('speechSynthesis' in window)) {
+    document.getElementById('noSupport').style.display = 'block';
+  }
+
+  function voiceQualityScore(v){
+    const name = v.name.toLowerCase();
+    let score = 0;
+    if (name.includes('natural')) score += 10;
+    if (name.includes('neural')) score += 10;
+    if (name.includes('online')) score += 8;
+    if (name.includes('premium')) score += 8;
+    if (name.includes('enhanced')) score += 6;
+    if (name.includes('siri')) score += 6;
+    if (name.includes('google')) score += 4;
+    if (v.localService === false) score += 3;
+    if (name.includes('microsoft') && !name.includes('desktop')) score += 3;
+    return score;
+  }
+
+  function loadVoices(){
+    const allVoices = synth.getVoices();
+    const accent = accentSelect.value;
+    let list = allVoices.filter(v => v.lang.toLowerCase() === accent.toLowerCase());
+    if (list.length === 0) list = allVoices.filter(v => v.lang.toLowerCase().startsWith('en'));
+    if (list.length === 0) list = allVoices;
+    voices = list.sort((a,b)=> voiceQualityScore(b) - voiceQualityScore(a));
+    voiceSelect.innerHTML = '';
+    voices.forEach((v,i)=>{
+      const opt = document.createElement('option');
+      opt.value = i;
+      const tag = voiceQualityScore(v) >= 6 ? ' ⭐' : '';
+      opt.textContent = v.name + ' (' + v.lang + ')' + tag;
+      voiceSelect.appendChild(opt);
+    });
+  }
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+  accentSelect.addEventListener('change', loadVoices);
+
+  function resetButtons(){
+    document.querySelectorAll('.play-btn').forEach(b=>{
+      b.classList.remove('playing');
+      b.textContent = '▶ 듣기';
+    });
+  }
+
+  document.querySelectorAll('.play-btn').forEach(btn=>{
+    if (btn.id === 'playAllBtn') return;
+    btn.addEventListener('click', ()=>{
+      const targetId = btn.getAttribute('data-target');
+      const text = document.querySelector('#' + targetId + ' .en-text').textContent.trim();
+
+      if (isPlayingAll) { stopAll(); }
+
+      if (currentBtn === btn && synth.speaking) {
+        synth.cancel();
+        resetButtons();
+        currentBtn = null;
+        return;
+      }
+
+      synth.cancel();
+      resetButtons();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      const selectedVoice = voices[voiceSelect.value];
+      if (selectedVoice) utter.voice = selectedVoice;
+      utter.rate = parseFloat(rateRange.value);
+      utter.pitch = parseFloat(pitchRange.value);
+      utter.lang = accentSelect.value;
+
+      utter.onstart = () => {
+        btn.classList.add('playing');
+        btn.textContent = '⏸ 정지';
+        currentBtn = btn;
+      };
+      utter.onend = () => { resetButtons(); currentBtn = null; };
+      utter.onerror = () => { resetButtons(); currentBtn = null; };
+
+      synth.speak(utter);
+    });
+  });
+
+  // --- Play all verses in sequence ---
+  const playAllBtn = document.getElementById('playAllBtn');
+  let allPlayQueue = [];
+  let allPlayIndex = 0;
+  let isPlayingAll = false;
+
+  function stopAll(){
+    synth.cancel();
+    resetButtons();
+    document.querySelectorAll('.verse.speaking').forEach(v=>v.classList.remove('speaking'));
+    isPlayingAll = false;
+    playAllBtn.textContent = '▶ 3장 전체 듣기';
+    playAllBtn.classList.remove('playing');
+    currentBtn = null;
+  }
+
+  function speakQueueItem(){
+    if (allPlayIndex >= allPlayQueue.length){ stopAll(); return; }
+    const id = allPlayQueue[allPlayIndex];
+    document.querySelectorAll('.verse.speaking').forEach(v=>v.classList.remove('speaking'));
+    const verseEl = document.getElementById(id);
+    verseEl.classList.add('speaking');
+    verseEl.scrollIntoView({behavior:'smooth', block:'center'});
+
+    const text = verseEl.querySelector('.en-text').textContent.trim();
+    const utter = new SpeechSynthesisUtterance(text);
+    const selectedVoice = voices[voiceSelect.value];
+    if (selectedVoice) utter.voice = selectedVoice;
+    utter.rate = parseFloat(rateRange.value);
+    utter.pitch = parseFloat(pitchRange.value);
+    utter.lang = accentSelect.value;
+
+    utter.onend = () => { allPlayIndex++; if (isPlayingAll) speakQueueItem(); };
+    utter.onerror = () => { allPlayIndex++; if (isPlayingAll) speakQueueItem(); };
+
+    synth.speak(utter);
+  }
+
+  playAllBtn.addEventListener('click', ()=>{
+    if (isPlayingAll){ stopAll(); return; }
+
+    synth.cancel();
+    resetButtons();
+    allPlayQueue = Array.from(document.querySelectorAll('.verse')).map(v=>v.id);
+    allPlayIndex = 0;
+    isPlayingAll = true;
+    playAllBtn.textContent = '⏸ 전체 재생 중지';
+    playAllBtn.classList.add('playing');
+    speakQueueItem();
+  });
+
+  // --- Click a word to hear just that word ---
+  document.addEventListener('click', (e)=>{
+    const wordEl = e.target.closest('.gloss');
+    if (!wordEl) return;
+
+    if (isPlayingAll) { stopAll(); }
+    synth.cancel();
+    resetButtons();
+    currentBtn = null;
+
+    const word = wordEl.textContent;
+    const utter = new SpeechSynthesisUtterance(word);
+    const selectedVoice = voices[voiceSelect.value];
+    if (selectedVoice) utter.voice = selectedVoice;
+    utter.rate = parseFloat(rateRange.value);
+    utter.pitch = parseFloat(pitchRange.value);
+    utter.lang = accentSelect.value;
+
+    wordEl.style.opacity = '0.6';
+    utter.onend = () => { wordEl.style.opacity = '1'; };
+    utter.onerror = () => { wordEl.style.opacity = '1'; };
+
+    synth.speak(utter);
+  });
+</script>
+
+</body>
+</html>
